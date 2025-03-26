@@ -1,39 +1,69 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>D2Run Market</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-      body {
-        background-color: var(--tg-theme-bg-color);
-        color: var(--tg-theme-text-color);
-        font-family: sans-serif;
-        padding: 20px;
-      }
-      .button {
-        padding: 10px 20px;
-        background: #4caf50;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Добро пожаловать в магазин D2Run!</h1>
-    <p>Здесь вы можете приобрести спортивную экипировку для бега, трейлраннига и спортивного ориентирования.</p>
-    <button class="button" onclick="buy()">Купить</button>
+<head>
+  <meta charset="UTF-8" />
+  <title>Магазин D2Run</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      background-color: var(--tg-theme-bg-color);
+      color: var(--tg-theme-text-color);
+      font-family: sans-serif;
+      padding: 20px;
+    }
 
-    <script>
-      const tg = window.Telegram.WebApp;
-      tg.expand(); // делает окно на весь экран
+    .product {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
 
-      function buy() {
-        tg.sendData("buy_clicked"); // отправляет данные боту
-        alert("Вы нажали Купить!"); // временно
-      }
-    </script>
-  </body>
+    .product h3 {
+      margin: 0 0 10px;
+    }
+
+    .product button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .product button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h2>Добро пожаловать в магазин D2Run!</h2>
+
+  <div class="product">
+    <h3>Беговые кроссовки</h3>
+    <p>Удобные и лёгкие. Отлично подойдут для трейла и тренировок.</p>
+    <button onclick="buy('Кроссовки')">Купить</button>
+  </div>
+
+  <div class="product">
+    <h3>Гидратор 1.5л</h3>
+    <p>Подходит для длительных пробежек и походов.</p>
+    <button onclick="buy('Гидратор')">Купить</button>
+  </div>
+
+  <div class="product">
+    <h3>Футболка для бега</h3>
+    <p>Дышащий материал, идеальна для жары и марафонов.</p>
+    <button onclick="buy('Футболка')">Купить</button>
+  </div>
+
+  <script>
+    function buy(product) {
+      alert("Вы выбрали: " + product);
+      // если хочешь передавать обратно в бота:
+      // Telegram.WebApp.sendData(product);
+    }
+  </script>
+</body>
 </html>
