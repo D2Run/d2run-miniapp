@@ -1,69 +1,183 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Магазин D2Run</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
+      font-family: sans-serif;
       background-color: var(--tg-theme-bg-color);
       color: var(--tg-theme-text-color);
-      font-family: sans-serif;
+      margin: 0;
       padding: 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .cart-icon::after {
+      content: attr(data-count);
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: red;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
+      display: none;
+    }
+
+    .cart-icon[data-count]:not([data-count="0"])::after {
+      display: inline-block;
     }
 
     .product {
       border: 1px solid #ccc;
-      border-radius: 10px;
       padding: 15px;
-      margin-bottom: 15px;
-    }
-
-    .product h3 {
-      margin: 0 0 10px;
+      border-radius: 8px;
+      margin-top: 15px;
     }
 
     .product button {
       background-color: #4caf50;
       color: white;
+      padding: 10px;
       border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
+      border-radius: 6px;
+      margin-top: 10px;
       cursor: pointer;
     }
 
-    .product button:hover {
-      background-color: #45a049;
+    #cart, #checkout {
+      display: none;
+    }
+
+    .form-group {
+      margin: 10px 0;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .submit-btn {
+      background: black;
+      color: white;
+      padding: 15px;
+      width: 100%;
+      border: none;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    .back {
+      font-size: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      color: var(--tg-theme-link-color, #007AFF);
     }
   </style>
 </head>
 <body>
-  <h2>Добро пожаловать в магазин D2Run!</h2>
 
+<header>
+  <h2>Спорт Маркет</h2>
+  <div class="cart-icon" data-count="0" onclick="showCart()">🛒</div>
+</header>
+
+<div id="products">
   <div class="product">
-    <h3>Беговые кроссовки</h3>
-    <p>Удобные и лёгкие. Отлично подойдут для трейла и тренировок.</p>
-    <button onclick="buy('Кроссовки')">Купить</button>
+    <h3>ODYSSEY REACT 2 SHIELD</h3>
+    <p>РАЗМЕР: 24 СМ</p>
+    <p>7490 ₽</p>
+    <button onclick="addToCart('ODYSSEY REACT 2 SHIELD', 7490)">Купить</button>
   </div>
+</div>
 
-  <div class="product">
-    <h3>Гидратор 1.5л</h3>
-    <p>Подходит для длительных пробежек и походов.</p>
-    <button onclick="buy('Гидратор')">Купить</button>
-  </div>
+<div id="cart">
+  <h3>ВАША КОРЗИНА</h3>
+  <ul id="cart-list"></ul>
+  <p><b>ИТОГО:</b> <span id="total"></span> ₽</p>
+  <button class="submit-btn" onclick="proceedToCheckout()">ПЕРЕЙТИ К ОФОРМЛЕНИЮ</button>
+</div>
 
-  <div class="product">
-    <h3>Футболка для бега</h3>
-    <p>Дышащий материал, идеальна для жары и марафонов.</p>
-    <button onclick="buy('Футболка')">Купить</button>
-  </div>
+<div id="checkout">
+  <div class="back" onclick="goBack()">← ВЕРНУТЬСЯ К ТОВАРАМ</div>
+  <div class="form-group"><input type="text" id="name" placeholder="ВВЕДИТЕ ВАШЕ ИМЯ"></div>
+  <div class="form-group"><input type="text" id="telegram" placeholder="@USERNAME"></div>
+  <div class="form-group"><input type="text" id="city" placeholder="ВВЕДИТЕ ВАШ ГОРОД"></div>
+  <div class="form-group"><textarea id="info" placeholder="ДОП. ИНФОРМАЦИЯ, ЕСЛИ НУЖНО"></textarea></div>
+  <button class="submit-btn" onclick="sendOrder()">ОТПРАВИТЬ ЗАЯВКУ</button>
+</div>
 
-  <script>
-    function buy(product) {
-      alert("Вы выбрали: " + product);
-      // если хочешь передавать обратно в бота:
-      // Telegram.WebApp.sendData(product);
-    }
-  </script>
+<script>
+  let cart = [];
+
+  function addToCart(product, price) {
+    cart.push({ product, price });
+    document.querySelector('.cart-icon').setAttribute('data-count', cart.length);
+    alert("Товар добавлен в корзину");
+  }
+
+  function showCart() {
+    document.getElementById('products').style.display = 'none';
+    document.getElementById('cart').style.display = 'block';
+    document.getElementById('checkout').style.display = 'none';
+
+    const list = document.getElementById('cart-list');
+    list.innerHTML = "";
+    let total = 0;
+    cart.forEach((item, index) => {
+      const li = document.createElement("li");
+      li.textContent = `${item.product} — ${item.price} ₽`;
+      list.appendChild(li);
+      total += item.price;
+    });
+    document.getElementById('total').textContent = total;
+  }
+
+  function proceedToCheckout() {
+    document.getElementById('cart').style.display = 'none';
+    document.getElementById('checkout').style.display = 'block';
+  }
+
+  function goBack() {
+    document.getElementById('products').style.display = 'block';
+    document.getElementById('cart').style.display = 'none';
+    document.getElementById('checkout').style.display = 'none';
+  }
+
+  function sendOrder() {
+    const name = document.getElementById('name').value;
+    const telegram = document.getElementById('telegram').value;
+    const city = document.getElementById('city').value;
+    const info = document.getElementById('info').value;
+
+    const order = {
+      name,
+      telegram,
+      city,
+      info,
+      cart
+    };
+
+    Telegram.WebApp.sendData(JSON.stringify(order));
+    alert("Заявка отправлена!");
+    Telegram.WebApp.close();
+  }
+</script>
+
 </body>
 </html>
