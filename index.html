@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>D2Run Market</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+      body {
+        background-color: var(--tg-theme-bg-color);
+        color: var(--tg-theme-text-color);
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      .button {
+        padding: 10px 20px;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Добро пожаловать в магазин D2Run!</h1>
+    <p>Здесь вы можете приобрести спортивную экипировку для бега, трейлраннига и спортивного ориентирования.</p>
+    <button class="button" onclick="buy()">Купить</button>
+
+    <script>
+      const tg = window.Telegram.WebApp;
+      tg.expand(); // делает окно на весь экран
+
+      function buy() {
+        tg.sendData("buy_clicked"); // отправляет данные боту
+        alert("Вы нажали Купить!"); // временно
+      }
+    </script>
+  </body>
+</html>
